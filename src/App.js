@@ -21,6 +21,7 @@ import "@fontsource/roboto";
 import LoadingPage from "./components/LoadingPage";
 import ArrowUp from "./arrow-up.png";
 import ArrowDown from "./arrow-down.png";
+import ArrowUpDown from "./up-and-down.png";
 
 // Add comma to number
 const numberWithCommas = (x) => {
@@ -342,7 +343,7 @@ const CustomTable = (props) => {
                   ) : props.sortState === 2 ? (
                     <img className="arrowSize" src={ArrowUp} />
                   ) : (
-                    ""
+                    <img className="arrowSize" src={ArrowUpDown} />
                   )}
                 </Typography>
               </ButtonBase>
@@ -356,7 +357,7 @@ const CustomTable = (props) => {
                   ) : props.sortState === 4 ? (
                     <img className="arrowSize" src={ArrowUp} />
                   ) : (
-                    ""
+                    <img className="arrowSize" src={ArrowUpDown} />
                   )}
                 </Typography>
               </ButtonBase>
@@ -370,7 +371,7 @@ const CustomTable = (props) => {
                   ) : props.sortState === 6 ? (
                     <img className="arrowSize" src={ArrowUp} />
                   ) : (
-                    ""
+                    <img className="arrowSize" src={ArrowUpDown} />
                   )}
                 </Typography>
               </ButtonBase>
