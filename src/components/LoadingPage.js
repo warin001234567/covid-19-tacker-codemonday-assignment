@@ -6,7 +6,7 @@ const LoadingPage = (prop) => {
   return (
     <Grid className="fullScreen" container justify="center" alignItems="center">
       <ScaleLoader
-        color={"#fb3640"}
+        color={"#cbcbcb"}
         height={90}
         width={9}
         radius={4.5}

@@ -52,7 +52,6 @@ function App() {
   const fetchData = () => {
     const apiUrl = "https://api.covid19api.com/summary";
     axios.get(apiUrl).then((res) => {
-      console.log(res.data);
       handleDataCompelete(res.data.Countries);
       setCovidData(res.data);
       setFilterCovidData(res.data.Countries);
@@ -68,7 +67,6 @@ function App() {
 
   // filter data when autocompelete change and set to state
   const handleAutocompeleteChange = (value) => {
-    console.log(value);
     let result = covidData.Countries.filter((item) => {
       let temp = item.Country.toLowerCase();
       return temp.includes(value.toLowerCase());
@@ -79,7 +77,6 @@ function App() {
 
   // handle Table page change
   const handleChangeTablePage = (e, page) => {
-    console.log("tablePage", tablePage);
     setTablePage(page);
   };
 
@@ -99,7 +96,6 @@ function App() {
   };
 
   useEffect(() => {
-    // console.log(getWindowDimensions().width);
     setWindowDimensions(getWindowDimensions());
   }, [getWindowDimensions().width]);
 
@@ -122,7 +118,7 @@ function App() {
         <>
           {/* Hero Section */}
           <Grid container>
-            <Grid item xs={12}>
+            <Grid className="navbar" item xs={12}>
               <Grid container className="pl pt pb" justify="flex-start">
                 <Typography variant="h5">COVID-19 TRACKER</Typography>
               </Grid>
@@ -147,13 +143,6 @@ function App() {
                   </Typography>
                 </Grid>
               </Grid>
-              {/* <Grid className="mt" item xs={12}>
-              <div className="mt">
-                <Typography variant="subtitle2">
-                  data update on : {handleDateTime(covidData.Date)}
-                </Typography>
-              </div>
-            </Grid> */}
               <Grid container className="pr pl" justify="space-evenly">
                 <Grid item xl={2} md={3} xs={12} sm={7}>
                   <GlobalCard
@@ -195,7 +184,6 @@ function App() {
               style={{ width: 300 }}
               getOptionLabel={(option) => option}
               onInputChange={(e, v, r) => {
-                console.log("onInputChange++++++++++++++++");
                 handleAutocompeleteChange(v);
               }}
               autoComplete
