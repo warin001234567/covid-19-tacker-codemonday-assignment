@@ -50,7 +50,6 @@ function App() {
     getWindowDimensions()
   );
   const [sortState, setSortState] = useState(0);
-  const [searchText, setSearchText] = useState("");
 
   // fetch Data from Api
   const fetchData = () => {
