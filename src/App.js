@@ -185,7 +185,11 @@ function App() {
               }}
               autoComplete
               renderInput={(params) => (
-                <TextField {...params} label="Combo box" variant="outlined" />
+                <TextField
+                  {...params}
+                  label="Search Country"
+                  variant="outlined"
+                />
               )}
             />
           </Grid>
