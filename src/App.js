@@ -13,11 +13,14 @@ import {
   TableFooter,
   TablePagination,
   TableContainer,
+  ButtonBase,
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import axios from "axios";
 import "@fontsource/roboto";
 import LoadingPage from "./components/LoadingPage";
+import ArrowUp from "./arrow-up.png";
+import ArrowDown from "./arrow-down.png";
 
 // Add comma to number
 const numberWithCommas = (x) => {
@@ -45,6 +48,8 @@ function App() {
   const [windowDimensions, setWindowDimensions] = useState(
     getWindowDimensions()
   );
+  const [sortState, setSortState] = useState(0);
+  const [searchText, setSearchText] = useState("");
 
   // fetch Data from Api
   const fetchData = () => {
@@ -55,6 +60,76 @@ function App() {
       setFilterCovidData(res.data.Countries);
       setLoading(false);
     });
+  };
+
+  // handle click sort
+  const handleOnClickSort = (click) => {
+    let tempState;
+
+    if (click === 1) {
+      if (sortState === 1) {
+        setSortState(2);
+        tempState = 2;
+      } else if (sortState === 2) {
+        setSortState(0);
+        tempState = 0;
+      } else if (sortState !== 1) {
+        setSortState(1);
+        tempState = 1;
+      }
+    } else if (click === 2) {
+      if (sortState === 3) {
+        setSortState(4);
+        tempState = 4;
+      } else if (sortState === 4) {
+        setSortState(0);
+        tempState = 0;
+      } else if (sortState !== 3) {
+        setSortState(3);
+        tempState = 3;
+      }
+    } else if (click === 3) {
+      if (sortState === 5) {
+        setSortState(6);
+        tempState = 6;
+      } else if (sortState === 6) {
+        setSortState(0);
+        tempState = 0;
+      } else if (sortState !== 5) {
+        setSortState(5);
+        tempState = 5;
+      }
+    }
+    sortCovidData(tempState);
+  };
+
+  // sort
+  const sortCovidData = (temp) => {
+    if (temp === 1) {
+      filterCovidData.sort((a, b) => {
+        return a.TotalConfirmed > b.TotalConfirmed ? 1 : -1;
+      });
+    } else if (temp === 2) {
+      filterCovidData.sort((a, b) => {
+        return a.TotalConfirmed < b.TotalConfirmed ? 1 : -1;
+      });
+    } else if (temp === 3) {
+      filterCovidData.sort((a, b) => {
+        return a.TotalRecovered > b.TotalRecovered ? 1 : -1;
+      });
+    } else if (temp === 4) {
+      filterCovidData.sort((a, b) => {
+        return a.TotalRecovered < b.TotalRecovered ? 1 : -1;
+      });
+    } else if (temp === 5) {
+      filterCovidData.sort((a, b) => {
+        return a.TotalDeaths > b.TotalDeaths ? 1 : -1;
+      });
+    } else if (temp === 6) {
+      filterCovidData.sort((a, b) => {
+        return a.TotalDeaths < b.TotalDeaths ? 1 : -1;
+      });
+    }
   };
 
   // create data to autocompelete
@@ -95,6 +170,10 @@ function App() {
   useEffect(() => {
     setWindowDimensions(getWindowDimensions());
   }, [getWindowDimensions().width]);
+
+  // useEffect(() => {
+  //   sortCovidData();
+  // }, [sortState]);
 
   useEffect(() => {
     fetchData();
@@ -211,6 +290,8 @@ function App() {
                 onChangePage={handleChangeTablePage}
                 rowsPerPage={tableRowPerPages}
                 onChangeRowsPerPage={handleRowPerPageChange}
+                sortState={sortState}
+                click={handleOnClickSort}
               />
             </Grid>
           </Grid>
@@ -253,13 +334,46 @@ const CustomTable = (props) => {
               <Typography variant="subtitle2">Country</Typography>
             </TableCell>
             <TableCell>
-              <Typography variant="subtitle2">Total Confirmed</Typography>
+              <ButtonBase disableRipple onClick={() => props.click(1)}>
+                <Typography variant="subtitle2">
+                  Total Confirmed{" "}
+                  {props.sortState === 1 ? (
+                    <img className="arrowSize" src={ArrowDown} />
+                  ) : props.sortState === 2 ? (
+                    <img className="arrowSize" src={ArrowUp} />
+                  ) : (
+                    ""
+                  )}
+                </Typography>
+              </ButtonBase>
             </TableCell>
             <TableCell>
-              <Typography variant="subtitle2">Total Recovered</Typography>
+              <ButtonBase disableRipple onClick={() => props.click(2)}>
+                <Typography variant="subtitle2">
+                  Total Recovered{" "}
+                  {props.sortState === 3 ? (
+                    <img className="arrowSize" src={ArrowDown} />
+                  ) : props.sortState === 4 ? (
+                    <img className="arrowSize" src={ArrowUp} />
+                  ) : (
+                    ""
+                  )}
+                </Typography>
+              </ButtonBase>
             </TableCell>
             <TableCell>
-              <Typography variant="subtitle2">Total Deaths</Typography>
+              <ButtonBase disableRipple onClick={() => props.click(3)}>
+                <Typography variant="subtitle2">
+                  Total Deaths{" "}
+                  {props.sortState === 5 ? (
+                    <img className="arrowSize" src={ArrowDown} />
+                  ) : props.sortState === 6 ? (
+                    <img className="arrowSize" src={ArrowUp} />
+                  ) : (
+                    ""
+                  )}
+                </Typography>
+              </ButtonBase>
             </TableCell>
           </TableRow>
         </TableHead>
