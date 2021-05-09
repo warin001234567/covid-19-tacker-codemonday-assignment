@@ -42,7 +42,6 @@ function App() {
   const [tableRowPerPages, setTabalRowPerPages] = useState(10);
   const [autoCompelete, setAutocompelete] = useState(null);
   const [filterCovidData, setFilterCovidData] = useState(null);
-  const [searchText, setSearchText] = useState("");
   const [windowDimensions, setWindowDimensions] = useState(
     getWindowDimensions()
   );
@@ -71,7 +70,6 @@ function App() {
       return temp.includes(value.toLowerCase());
     });
     setFilterCovidData(result);
-    setSearchText(value);
   };
 
   // handle Table page change
