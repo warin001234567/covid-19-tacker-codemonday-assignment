@@ -1,33 +1,13 @@
 import { useState, useEffect } from "react";
 import "./App.css";
-import {
-  Container,
-  Grid,
-  Typography,
-  TextField,
-  Table,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
-  TableFooter,
-  TablePagination,
-  TableContainer,
-  ButtonBase,
-} from "@material-ui/core";
+import { Container, Grid, Typography, TextField } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import axios from "axios";
 import "@fontsource/roboto";
 import LoadingPage from "./components/LoadingPage";
-import ArrowUp from "./arrow-up.png";
-import ArrowDown from "./arrow-down.png";
-import ArrowUpDown from "./up-and-down.png";
-
-// Add comma to number
-const numberWithCommas = (x) => {
-  if (x !== 0) return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  return "unreported";
-};
+import GlobalCard from "./components/GlobalCard";
+import CustomTable from "./components/CustomTable";
+import globalFunc from "./reuseFuction";
 
 // get window height and width
 function getWindowDimensions() {
@@ -65,70 +45,90 @@ function App() {
   // handle click sort
   const handleOnClickSort = (click) => {
     let tempState;
-
-    if (click === 1) {
-      if (sortState === 1) {
-        setSortState(2);
-        tempState = 2;
-      } else if (sortState === 2) {
-        setSortState(0);
-        tempState = 0;
-      } else if (sortState !== 1) {
-        setSortState(1);
-        tempState = 1;
-      }
-    } else if (click === 2) {
-      if (sortState === 3) {
-        setSortState(4);
-        tempState = 4;
-      } else if (sortState === 4) {
-        setSortState(0);
-        tempState = 0;
-      } else if (sortState !== 3) {
-        setSortState(3);
-        tempState = 3;
-      }
-    } else if (click === 3) {
-      if (sortState === 5) {
-        setSortState(6);
-        tempState = 6;
-      } else if (sortState === 6) {
-        setSortState(0);
-        tempState = 0;
-      } else if (sortState !== 5) {
-        setSortState(5);
-        tempState = 5;
-      }
+    switch (click) {
+      case 1:
+        if (sortState === 1) {
+          setSortState(2);
+          tempState = 2;
+        } else if (sortState === 2) {
+          setSortState(0);
+          tempState = 0;
+        } else if (sortState !== 1) {
+          setSortState(1);
+          tempState = 1;
+        }
+        break;
+      case 2:
+        if (sortState === 3) {
+          setSortState(4);
+          tempState = 4;
+        } else if (sortState === 4) {
+          setSortState(0);
+          tempState = 0;
+        } else if (sortState !== 3) {
+          setSortState(3);
+          tempState = 3;
+        }
+        break;
+      case 3:
+        if (sortState === 5) {
+          setSortState(6);
+          tempState = 6;
+        } else if (sortState === 6) {
+          setSortState(0);
+          tempState = 0;
+        } else if (sortState !== 5) {
+          setSortState(5);
+          tempState = 5;
+        }
+        break;
+      default:
+        break;
     }
     sortCovidData(tempState);
   };
 
   // sort
   const sortCovidData = (temp) => {
-    if (temp === 1) {
-      filterCovidData.sort((a, b) => {
-        return a.TotalConfirmed > b.TotalConfirmed ? 1 : -1;
-      });
-    } else if (temp === 2) {
-      filterCovidData.sort((a, b) => {
-        return a.TotalConfirmed < b.TotalConfirmed ? 1 : -1;
-      });
-    } else if (temp === 3) {
-      filterCovidData.sort((a, b) => {
-        return a.TotalRecovered > b.TotalRecovered ? 1 : -1;
-      });
-    } else if (temp === 4) {
-      filterCovidData.sort((a, b) => {
-        return a.TotalRecovered < b.TotalRecovered ? 1 : -1;
-      });
-    } else if (temp === 5) {
-      filterCovidData.sort((a, b) => {
-        return a.TotalDeaths > b.TotalDeaths ? 1 : -1;
-      });
-    } else if (temp === 6) {
-      filterCovidData.sort((a, b) => {
-        return a.TotalDeaths < b.TotalDeaths ? 1 : -1;
-      });
+    switch (temp) {
+      case 1:
+        filterCovidData.sort((a, b) => {
+          return a.TotalConfirmed > b.TotalConfirmed ? 1 : -1;
+        });
+        break;
+
+      case 2:
+        filterCovidData.sort((a, b) => {
+          return a.TotalConfirmed < b.TotalConfirmed ? 1 : -1;
+        });
+        break;
+
+      case 3:
+        filterCovidData.sort((a, b) => {
+          return a.TotalRecovered > b.TotalRecovered ? 1 : -1;
+        });
+        break;
+
+      case 4:
+        filterCovidData.sort((a, b) => {
+          return a.TotalRecovered < b.TotalRecovered ? 1 : -1;
+        });
+        break;
+
+      case 5:
+        filterCovidData.sort((a, b) => {
+          return a.TotalDeaths > b.TotalDeaths ? 1 : -1;
+        });
+        break;
+
+      case 6:
+        filterCovidData.sort((a, b) => {
+          return a.TotalDeaths < b.TotalDeaths ? 1 : -1;
+        });
+        break;
+
+      default:
+        break;
     }
   };
 
@@ -170,10 +170,6 @@ function App() {
   useEffect(() => {
     setWindowDimensions(getWindowDimensions());
   }, [getWindowDimensions().width]);
-
-  // useEffect(() => {
-  //   sortCovidData();
-  // }, [sortState]);
 
   useEffect(() => {
     fetchData();
@@ -223,7 +219,9 @@ function App() {
                 <Grid item xl={2} md={3} xs={12} sm={7}>
                   <GlobalCard
                     title="Total Confirmed"
-                    data={numberWithCommas(covidData.Global.TotalConfirmed)}
+                    data={globalFunc.numberWithCommas(
+                      covidData.Global.TotalConfirmed
+                    )}
                     titleClass="Confirmed"
                     contentClass="confirmContent"
                   />
@@ -231,7 +229,9 @@ function App() {
                 <Grid item xl={2} md={3} xs={12} sm={7}>
                   <GlobalCard
                     title="Total Recover"
-                    data={numberWithCommas(covidData.Global.TotalRecovered)}
+                    data={globalFunc.numberWithCommas(
+                      covidData.Global.TotalRecovered
+                    )}
                     titleClass="Recover"
                     contentClass="recoverContent"
                   />
@@ -239,7 +239,9 @@ function App() {
                 <Grid item xl={2} md={3} xs={12} sm={7}>
                   <GlobalCard
                     title="Total Deaths"
-                    data={numberWithCommas(covidData.Global.TotalDeaths)}
+                    data={globalFunc.numberWithCommas(
+                      covidData.Global.TotalDeaths
+                    )}
                     titleClass="Deaths"
                     contentClass="deathContent"
                   />
@@ -300,115 +302,5 @@ function App() {
     </Container>
   );
 }
-
-// this component to create Global Card
-const GlobalCard = (props) => {
-  return (
-    <Grid container className="mb globalReportCard">
-      <Grid item xs={12} className={`globalReportTitle ${props.titleClass}`}>
-        <Typography variant="h5" component="h2">
-          {props.title}
-        </Typography>
-      </Grid>
-      <Grid
-        container
-        className={`globalReportValue ${props.contentClass}`}
-        justify="center"
-        alignItems="center"
-      >
-        <Typography variant="h5">{props.data}</Typography>
-      </Grid>
-    </Grid>
-  );
-};
-
-// this component create custom table
-const CustomTable = (props) => {
-  return (
-    <TableContainer style={{ width: "100%" }}>
-      <Table>
-        {/* Head Part */}
-        <TableHead>
-          <TableRow>
-            <TableCell>
-              <Typography variant="subtitle2">Country</Typography>
-            </TableCell>
-            <TableCell>
-              <ButtonBase disableRipple onClick={() => props.click(1)}>
-                <Typography variant="subtitle2">
-                  Total Confirmed{" "}
-                  {props.sortState === 1 ? (
-                    <img className="arrowSize" src={ArrowDown} />
-                  ) : props.sortState === 2 ? (
-                    <img className="arrowSize" src={ArrowUp} />
-                  ) : (
-                    <img className="arrowSize" src={ArrowUpDown} />
-                  )}
-                </Typography>
-              </ButtonBase>
-            </TableCell>
-            <TableCell>
-              <ButtonBase disableRipple onClick={() => props.click(2)}>
-                <Typography variant="subtitle2">
-                  Total Recovered{" "}
-                  {props.sortState === 3 ? (
-                    <img className="arrowSize" src={ArrowDown} />
-                  ) : props.sortState === 4 ? (
-                    <img className="arrowSize" src={ArrowUp} />
-                  ) : (
-                    <img className="arrowSize" src={ArrowUpDown} />
-                  )}
-                </Typography>
-              </ButtonBase>
-            </TableCell>
-            <TableCell>
-              <ButtonBase disableRipple onClick={() => props.click(3)}>
-                <Typography variant="subtitle2">
-                  Total Deaths{" "}
-                  {props.sortState === 5 ? (
-                    <img className="arrowSize" src={ArrowDown} />
-                  ) : props.sortState === 6 ? (
-                    <img className="arrowSize" src={ArrowUp} />
-                  ) : (
-                    <img className="arrowSize" src={ArrowUpDown} />
-                  )}
-                </Typography>
-              </ButtonBase>
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        {/* Body Part */}
-        <TableBody>
-          {(props.rowsPerPage > 0
-            ? props.data.slice(
-                props.page * props.rowsPerPage,
-                props.page * props.rowsPerPage + props.rowsPerPage
-              )
-            : props.data
-          ).map((item) => (
-            <TableRow key={item.ID}>
-              <TableCell>{item.Country}</TableCell>
-              <TableCell>{numberWithCommas(item.TotalConfirmed)}</TableCell>
-              <TableCell>{numberWithCommas(item.TotalRecovered)}</TableCell>
-              <TableCell>{numberWithCommas(item.TotalDeaths)}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TablePagination
-              rowsPerPage={props.rowsPerPage}
-              rowsPerPageOptions={[10, 20, 50, 100]}
-              onChangeRowsPerPage={props.onChangeRowsPerPage}
-              page={props.page}
-              count={props.data.length}
-              onChangePage={(e, page) => props.onChangePage(e, page)}
-            />
-          </TableRow>
-        </TableFooter>
-      </Table>
-    </TableContainer>
-  );
-};
 
 export default App;
